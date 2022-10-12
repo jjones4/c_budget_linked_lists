@@ -2,18 +2,18 @@
  *
  * Name:       c_budget_menus.c
  *
- * Purpose:    Contains functions for showing c_budget_dynamic_strings's
- * menus to the user.
+ * Purpose:    Contains functions for showing c_budget_linked_lists'
+ *             menus to the user.
  *
 
  * Author:     jjones4
  *
  * Copyright (c) 2022 Jerad Jones
- * This file is part of c_budget_dynamic_strings.  c_budget_dynamic_strings
+ * This file is part of c_budget_linked_lists.  c_budget_linked_lists
  * may be freely distributed under the MIT license.  For all details and
  * documentation, see
  
- * https://github.com/jjones4/c_budget_dynamic_strings
+ * https://github.com/jjones4/c_budget_linked_lists
  *
  */
 
@@ -30,7 +30,7 @@
 
 /*
  *
- * Displays c_budget_dynamic_strings's main (initial) menu
+ * Displays c_budget_linked_lists' main (initial) menu
  *
  */
 void display_main_menu(void)
@@ -52,7 +52,7 @@ void display_main_menu(void)
 
 /*
  *
- * Displays c_budget_dynamic_strings's menu for updating a budget record
+ * Displays c_budget_linked_lists' menu for updating a budget record
  *
  */
 void display_update_record_menu(void)

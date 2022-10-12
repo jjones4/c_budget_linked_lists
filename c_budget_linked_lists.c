@@ -1,6 +1,6 @@
 /*
  *
- * Name:       c_budget_dynamic_strings
+ * Name:       c_budget_linked_lists
  *
  * Purpose:    Keep track of a simple budget in a text file.
  *
@@ -15,11 +15,11 @@
  * Author:     jjones4
  *
  * Copyright (c) 2022 Jerad Jones
- * This file is part of c_budget_dynamic_strings.  c_budget_dynamic_strings
+ * This file is part of c_budget_linked_lists.  c_budget_linked_lists
  * may be freely distributed under the MIT license.  For all details and
  * documentation, see
  *
- * https://github.com/jjones4/c_budget_dynamic_strings
+ * https://github.com/jjones4/c_budget_linked_lists
  *
  */
 
