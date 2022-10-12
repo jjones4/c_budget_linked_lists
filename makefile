@@ -15,15 +15,15 @@ CC = gcc
 CFLAGS = -g -Wall -Wextra -O -W -pedantic -ansi -std=c89
 
 # the build target executable:
-TARGET = c_budget_dynamic_strings
+TARGET = c_budget_linked_lists
 
 all: $(TARGET)
   
-$(TARGET): c_budget_dynamic_strings.o c_budget_menus.o c_budget_validation.o c_budget_read_input.o c_budget_crud_operations.o
-	$(CC) $(CFLAGS) -o c_budget_dynamic_strings c_budget_dynamic_strings.o c_budget_menus.o c_budget_validation.o c_budget_read_input.o c_budget_crud_operations.o
+$(TARGET): c_budget_linked_lists.o c_budget_menus.o c_budget_validation.o c_budget_read_input.o c_budget_crud_operations.o
+	$(CC) $(CFLAGS) -o c_budget_linked_lists c_budget_linked_lists.o c_budget_menus.o c_budget_validation.o c_budget_read_input.o c_budget_crud_operations.o
 
-c_budget.o: $(TARGET).c c_budget_menus.c c_budget_validation.c c_budget_read_input.c c_budget_crud_operations.c
-	$(CC) $(CFLAGS) -c c_budget_dynamic_strings.c
+c_budget_linked_lists.o: $(TARGET).c c_budget_menus.c c_budget_validation.c c_budget_read_input.c c_budget_crud_operations.c
+	$(CC) $(CFLAGS) -c c_budget_linked_lists.c
 
 c_budget_crud_operations.o: c_budget_crud_operations.c c_budget_crud_operations.h
 	$(CC) $(CFLAGS) -c c_budget_crud_operations.c
