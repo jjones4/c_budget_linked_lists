@@ -46,11 +46,23 @@ int main(void)
 {
    FILE *fp;
    char *budget[MAX_TRANSACTIONS];
-   char *p;
-   char **c;
+   
+   struct transaction
+   {
+      char *date;
+      char *amount;
+      char *type;
+      char *description;
+      struct transaction *next;
+   }
+   
+   struct transaction *budget = NULL;
+   
+   struct transaction *p;
    
    char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1] = {0};
    char main_menu_input_string[MENU_INPUT_LENGTH + 1];
+   
    int number_of_transactions = 0;
    int menu_option_to_int;
    int read_input_return_code;
@@ -69,14 +81,13 @@ int main(void)
    }
    
    /*
-    * Read the transactions from file. Stop filling the 2d array after we
+    * Read the transactions from file. Stop filling the list after we
     * reach the max number of transactions. If we can read another transaction,
     * above the max, the file is too large, and we will exit.
     */
-   c = budget;
-   while(
-      fgets
-         (complete_transaction_string, MAX_TRANSACTION_LENGTH + 1, fp) != NULL
+   p = budget;
+   while(fgets(complete_transaction_string,
+      MAX_TRANSACTION_LENGTH + 1, fp) != NULL
       && number_of_transactions < MAX_TRANSACTIONS + 1)
    {
       /*
@@ -95,8 +106,9 @@ int main(void)
          return EXIT_FAILURE;
       }
       
-      /* Put a pointer the current line of our text file into our array */
-      p = malloc(strlen(complete_transaction_string) + 1);
+      /* Allocate memory for a new transaction structure coming from
+       * the file */
+      p = malloc(sizeof(struct transaction));
       
       if(p == NULL)
       {
@@ -113,15 +125,6 @@ int main(void)
    }
    
    fclose(fp);
-   
-   /* Code for looping through and dereferencing the budget array
-   c = budget;
-   for(i = 0; i < number_of_transactions; i++)
-   {
-      printf("\n%s\n", *c);
-      c++;
-   }
-   */
    
    for( ;; )
    {
