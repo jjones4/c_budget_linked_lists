@@ -35,6 +35,8 @@
 #include "c_budget_read_input.h"
 #include "c_budget_crud_operations.h"
 
+char *parse_transaction_string(char *transaction_field, char *complete_transaction_string);
+
 
 
 /*
@@ -45,7 +47,12 @@
 int main(void)
 {
    FILE *fp;
-   char *budget[MAX_TRANSACTIONS];
+   char *transaction_string_index;
+   
+   char date_string[DATE_LENGTH + 1];
+   char amount_string[AMOUNT_LENGTH + 1];
+   char type_string[TYPE_LENGTH + 1];
+   char description_string[DESCRIPTION_LENGTH + 1];
    
    struct transaction
    {
@@ -53,12 +60,15 @@ int main(void)
       char *amount;
       char *type;
       char *description;
+      
       struct transaction *next;
-   }
+   };
    
+   /* This will be our "first" node in the unordered list */
+   /* This node begins the list of all transactions in our budget */
    struct transaction *budget = NULL;
    
-   struct transaction *p;
+   struct transaction *new_node;
    
    char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1] = {0};
    char main_menu_input_string[MENU_INPUT_LENGTH + 1];
@@ -66,6 +76,8 @@ int main(void)
    int number_of_transactions = 0;
    int menu_option_to_int;
    int read_input_return_code;
+   
+   struct transaction *p;
    
    /*
     * Check for the existence of budget.txt
@@ -85,7 +97,6 @@ int main(void)
     * reach the max number of transactions. If we can read another transaction,
     * above the max, the file is too large, and we will exit.
     */
-   p = budget;
    while(fgets(complete_transaction_string,
       MAX_TRANSACTION_LENGTH + 1, fp) != NULL
       && number_of_transactions < MAX_TRANSACTIONS + 1)
@@ -106,25 +117,48 @@ int main(void)
          return EXIT_FAILURE;
       }
       
+      /* Keep track of our position as we read from the complete_transaction_string array */
+      transaction_string_index = complete_transaction_string;
+   
+      transaction_string_index = parse_transaction_string(date_string, transaction_string_index);
+      transaction_string_index = parse_transaction_string(amount_string, transaction_string_index);
+      transaction_string_index = parse_transaction_string(type_string, transaction_string_index);
+      transaction_string_index = parse_transaction_string(description_string, transaction_string_index);
+      
       /* Allocate memory for a new transaction structure coming from
        * the file */
-      p = malloc(sizeof(struct transaction));
+      new_node = malloc(sizeof(struct transaction));
       
-      if(p == NULL)
+      if(new_node == NULL)
       {
          printf("\nMemory allocation error.\n");
          return EXIT_FAILURE;
       }
       
-      strcpy(p, complete_transaction_string);
-      *c = p;
+      /* Add our new transaction node to the beginning of our list */
+      new_node->date = date_string;
+      new_node->amount = amount_string;
+      new_node->type = type_string;
+      new_node->description = description_string;
       
-      c++;
+      new_node->next = budget;
+      
+      budget = new_node;
+      
+      /* Test code */
+      printf("\nDate: %s", budget->date);
       
       number_of_transactions++;
    }
    
    fclose(fp);
+   
+   /*test code*/
+   for(p = budget; p != NULL; p = p->next)
+   {
+      printf("\n%s %s %s %s", p->date, p->amount, p->type, p->description);
+      printf(" Pointer: %p", p->next);
+   }
    
    for( ;; )
    {
@@ -156,8 +190,10 @@ int main(void)
              */
             if(number_of_transactions < MAX_TRANSACTIONS)
             {
+               /*
                number_of_transactions = create_transaction(&number_of_transactions,
                   budget);
+               */
             }
             else
             {
@@ -167,8 +203,10 @@ int main(void)
          }
          else if(menu_option_to_int == 2)
          {
+            /*
             number_of_transactions =
                read_transactions(&number_of_transactions, budget);
+            */
          }
          else if(menu_option_to_int == 3)
          {
@@ -180,8 +218,10 @@ int main(void)
             }
             else
             {
+               /*
                number_of_transactions =
                   update_transaction(&number_of_transactions, budget);
+               */
             }
          }
          else if(menu_option_to_int == 4)
@@ -194,8 +234,10 @@ int main(void)
             }
             else
             {
+               /*
                number_of_transactions =
                   delete_transaction(&number_of_transactions, budget);
+               */
             }
          }
          else if(menu_option_to_int == 5)
