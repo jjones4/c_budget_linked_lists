@@ -174,32 +174,22 @@ int create_transaction(int *number_of_transactions, char **budget)
 
 
 
-int read_transactions(int *number_of_transactions, char **budget)
+int read_transactions(int *number_of_transactions, struct transaction *budget)
 {
-   char date_string[DATE_LENGTH + 1];
-   char amount_string[AMOUNT_LENGTH + 1];
-   char type_string[TYPE_LENGTH + 1];
-   char description_string[DESCRIPTION_LENGTH + 1];
-   char *transaction_string_index;
-   int i;
+   struct transaction *temp = budget;
+   int i = 1;
    
    printf("%-10s\t%-11s\t%-10s\t%-5s\t%-50s\n", "Id", "Date", "Amount", "Type", "Description");
    printf("%10s\t%-11s\t%-10s\t%-5s\t%-50s\n", "----------", "-----------", "----------", "-----",
           "--------------------------------------------------");
    
    /* Print out the transactions from the 2d array */
-   for(i = 0; i < *number_of_transactions; i++)
+   while(temp != NULL)
    {
-      /* Keep track of our position as we read from the complete_transaction_string array */
-      transaction_string_index = *(budget + i);
-   
-      transaction_string_index = parse_transaction_string(date_string, transaction_string_index);
-      transaction_string_index = parse_transaction_string(amount_string, transaction_string_index);
-      transaction_string_index = parse_transaction_string(type_string, transaction_string_index);
-      transaction_string_index = parse_transaction_string(description_string, transaction_string_index);
-      
-      printf("%10d\t%-11s\t%10s\t%5s\t%-50s\n", i + 1, date_string,
-         amount_string, type_string, description_string);
+      printf("%10d\t%-11s\t%10s\t%5s\t%-50s\n", i + 1, temp->date,
+         temp->amount, temp->type, temp->description);
+      temp = temp->next;
+      i++;
    }
    
    return *number_of_transactions;
@@ -229,7 +219,9 @@ int update_transaction(int *number_of_transactions, char **budget)
    
    int i, id = 0;
    
+   /*
    (void) read_transactions(number_of_transactions, budget);
+   */
    
    do
    {
@@ -451,7 +443,9 @@ int delete_transaction(int *number_of_transactions, char **budget)
    
    int i, id = 0;
    
+   /*
    (void) read_transactions(number_of_transactions, budget);
+   */
    
    do
    {

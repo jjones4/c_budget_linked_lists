@@ -25,8 +25,18 @@
 #include <stdio.h>
 #include "c_budget_read_input.h"
 
+struct transaction
+{
+   char *date;
+   char *amount;
+   char *type;
+   char *description;
+      
+   struct transaction *next;
+};
+
 int create_transaction(int *number_of_transactions, char **budget);
-int read_transactions(int *number_of_transactions, char **budget);
+int read_transactions(int *number_of_transactions, struct transaction *budget);
 int update_transaction(int *number_of_transactions, char **budget);
 int delete_transaction(int *number_of_transactions, char **budget);
 

@@ -54,21 +54,15 @@ int main(void)
    char type_string[TYPE_LENGTH + 1];
    char description_string[DESCRIPTION_LENGTH + 1];
    
-   struct transaction
-   {
-      char *date;
-      char *amount;
-      char *type;
-      char *description;
-      
-      struct transaction *next;
-   };
+   char *date;
+   char *amount;
+   char *type;
+   char *description;
    
    /* This will be our "first" node in the unordered list */
    /* This node begins the list of all transactions in our budget */
    struct transaction *budget = NULL;
-   
-   struct transaction *new_node;
+   struct transaction *current_node;
    
    char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1] = {0};
    char main_menu_input_string[MENU_INPUT_LENGTH + 1];
@@ -76,8 +70,6 @@ int main(void)
    int number_of_transactions = 0;
    int menu_option_to_int;
    int read_input_return_code;
-   
-   struct transaction *p;
    
    /*
     * Check for the existence of budget.txt
@@ -125,40 +117,38 @@ int main(void)
       transaction_string_index = parse_transaction_string(type_string, transaction_string_index);
       transaction_string_index = parse_transaction_string(description_string, transaction_string_index);
       
-      /* Allocate memory for a new transaction structure coming from
+      /* Allocate memory for new transaction structure coming from
        * the file */
-      new_node = malloc(sizeof(struct transaction));
+      current_node = malloc(sizeof(struct transaction));
       
-      if(new_node == NULL)
+      if(current_node == NULL)
       {
          printf("\nMemory allocation error.\n");
          return EXIT_FAILURE;
       }
       
-      /* Add our new transaction node to the beginning of our list */
-      new_node->date = date_string;
-      new_node->amount = amount_string;
-      new_node->type = type_string;
-      new_node->description = description_string;
+      date = malloc(strlen(date_string));
+      amount = malloc(strlen(amount_string));
+      type = malloc(strlen(type_string));
+      description= malloc(strlen(description_string));
       
-      new_node->next = budget;
+      strcpy(date, date_string);
+      strcpy(amount, amount_string);
+      strcpy(type, type_string);
+      strcpy(description, description_string);
       
-      budget = new_node;
+      current_node->date = date;
+      current_node->amount = amount;
+      current_node->type = type;
+      current_node->description = description;
       
-      /* Test code */
-      printf("\nDate: %s", budget->date);
+      current_node->next = budget;
+      budget = current_node;
       
       number_of_transactions++;
    }
    
    fclose(fp);
-   
-   /*test code*/
-   for(p = budget; p != NULL; p = p->next)
-   {
-      printf("\n%s %s %s %s", p->date, p->amount, p->type, p->description);
-      printf(" Pointer: %p", p->next);
-   }
    
    for( ;; )
    {
@@ -203,10 +193,8 @@ int main(void)
          }
          else if(menu_option_to_int == 2)
          {
-            /*
             number_of_transactions =
                read_transactions(&number_of_transactions, budget);
-            */
          }
          else if(menu_option_to_int == 3)
          {
