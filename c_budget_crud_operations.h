@@ -35,9 +35,14 @@ struct transaction
    struct transaction *next;
 };
 
-int create_transaction(int *number_of_transactions, struct transaction *budget);
+/* For the Create function, we are using a pointer to a pointer to a budget
+ * transaction node. This is because we need to modify the address of the
+ * first node in the list when we create a new node.
+ */
+int create_transaction(int *number_of_transactions, struct transaction **ptr_budget);
+
 int read_transactions(int *number_of_transactions, struct transaction *budget);
-int update_transaction(int *number_of_transactions, char **budget);
+int update_transaction(int *number_of_transactions, struct transaction *budget);
 int delete_transaction(int *number_of_transactions, char **budget);
 
 #endif

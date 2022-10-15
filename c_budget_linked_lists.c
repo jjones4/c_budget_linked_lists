@@ -182,7 +182,7 @@ int main(void)
             if(number_of_transactions < MAX_TRANSACTIONS)
             {
                number_of_transactions = create_transaction(&number_of_transactions,
-                  budget);
+                  &budget);
             }
             else
             {
@@ -205,10 +205,8 @@ int main(void)
             }
             else
             {
-               /*
                number_of_transactions =
                   update_transaction(&number_of_transactions, budget);
-               */
             }
          }
          else if(menu_option_to_int == 4)

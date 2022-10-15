@@ -35,9 +35,10 @@ char *parse_transaction_string(char *transaction_field, char *complete_transacti
 
 
 
-int create_transaction(int *number_of_transactions, struct transaction *budget)
+int create_transaction(int *number_of_transactions, struct transaction **ptr_budget)
 {
    FILE *fp;
+   FILE* temp_pointer;
    char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1] = {0};
    char date_string[DATE_LENGTH + 1];
    char amount_string[AMOUNT_LENGTH + 1];
@@ -50,6 +51,7 @@ int create_transaction(int *number_of_transactions, struct transaction *budget)
    char *description;
    
    struct transaction *new_node;
+   struct transaction *p;
    
    BOOL valid_amount = FALSE, valid_description = FALSE;
    
@@ -142,15 +144,6 @@ int create_transaction(int *number_of_transactions, struct transaction *budget)
       }
    } while(!valid_description);
    
-   strcpy(complete_transaction_string, date_string);
-   strcat(complete_transaction_string, "|");
-   strcat(complete_transaction_string, amount_string);
-   strcat(complete_transaction_string, "|");
-   strcat(complete_transaction_string, type_string);
-   strcat(complete_transaction_string, "|");
-   strcat(complete_transaction_string, description_string);
-   strcat(complete_transaction_string, "|");
-   
    /* Allocate memory for our new transaction node */
    new_node = malloc(sizeof(struct transaction));
       
@@ -176,11 +169,36 @@ int create_transaction(int *number_of_transactions, struct transaction *budget)
    new_node->type = type;
    new_node->description = description;
       
-   new_node->next = budget;
-   budget = new_node;
+   new_node->next = *ptr_budget;
+   *ptr_budget = new_node;
+   
+   temp_pointer = fopen(TEMP_FILE_NAME, "w");
+   if(temp_pointer == NULL)
+   {
+      printf("\nFile error.\n\n");
+      printf("Could not open %s for writing..\n\n", TEMP_FILE_NAME);
+      exit(EXIT_FAILURE);
+   }
    
    /* Write record to budget.txt */
-   fprintf(fp, "%s", complete_transaction_string);
+   p = *ptr_budget;
+   while(p != NULL)
+   {
+      strcpy(complete_transaction_string, p->date);
+      strcat(complete_transaction_string, "|");
+      strcat(complete_transaction_string, p->amount);
+      strcat(complete_transaction_string, "|");
+      strcat(complete_transaction_string, p->type);
+      strcat(complete_transaction_string, "|");
+      strcat(complete_transaction_string, p->description);
+      strcat(complete_transaction_string, "|");
+      fprintf(temp_pointer, "%s\n", complete_transaction_string);
+      p = p->next;
+   }
+   
+   fclose(temp_pointer);
+   remove(FILE_NAME);
+   rename(TEMP_FILE_NAME, FILE_NAME);
    fclose(fp);
    
    printf("\nRecord was successfully added.\n");
@@ -214,7 +232,7 @@ int read_transactions(int *number_of_transactions, struct transaction *budget)
 
 
 
-int update_transaction(int *number_of_transactions, char **budget)
+int update_transaction(int *number_of_transactions, struct transaction *budget)
 {
    FILE* temp_pointer;
    char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1];
@@ -224,10 +242,9 @@ int update_transaction(int *number_of_transactions, char **budget)
    char amount_string[AMOUNT_LENGTH + 1];
    char type_string[TYPE_LENGTH + 1];
    char description_string[DESCRIPTION_LENGTH + 1];
-   char *transaction_string_index;
    
-   char *p;
-   char **c;
+   struct transaction *p;
+   struct transaction *prev;
    
    BOOL valid_id = FALSE;
    BOOL valid_date= FALSE;
@@ -236,9 +253,7 @@ int update_transaction(int *number_of_transactions, char **budget)
    
    int i, id = 0;
    
-   /*
    (void) read_transactions(number_of_transactions, budget);
-   */
    
    do
    {
@@ -266,19 +281,26 @@ int update_transaction(int *number_of_transactions, char **budget)
       }
    } while(!valid_id);
    
-   /* Go through the file until we get to the transaction line
+   /* Go through the list until we get to the transaction line
     * of the ID that the user gave. We will store this lilne
     * in the complete_transaction_string
     */
-   strcpy(complete_transaction_string, *(budget + id - 1));
-   
-   /* Keep track of our position as we read from the complete_transaction_string array */
-   transaction_string_index = complete_transaction_string;
-   
-   transaction_string_index = parse_transaction_string(date_string, transaction_string_index);
-   transaction_string_index = parse_transaction_string(amount_string, transaction_string_index);
-   transaction_string_index = parse_transaction_string(type_string, transaction_string_index);
-   transaction_string_index = parse_transaction_string(description_string, transaction_string_index);
+   p = budget;
+   prev = budget;
+   i = 1;
+   while(p != NULL && i <= id)
+   {
+      if(i == id)
+      {
+         strcpy(date_string, p->date);
+         strcpy(amount_string, p->amount);
+         strcpy(type_string, p->type);
+         strcpy(description_string, p->description);
+      }
+      prev = p;
+      p = p->next;
+      i++;
+   }
    
    /* Let the user choose which field they want to update */
    do
@@ -376,7 +398,8 @@ int update_transaction(int *number_of_transactions, char **budget)
 
          if(!valid_description)
          {
-            printf("\nThe description you entered was invalid. Please try again.\n");
+            printf("\nThe description you entered was invalid.");
+            printf(" Please try again.\n");
          }
       } while(!valid_description);
    }
@@ -390,33 +413,14 @@ int update_transaction(int *number_of_transactions, char **budget)
          printf("\nInvalid option entered. Please try again.\n");
    }
    
-   /* Rebuild the complete_transaction_string with any new data given
+   /*
+    * Rebuild the node with any new data given
     * by the user
     */
-    
-   strcpy(complete_transaction_string, date_string);
-   strcat(complete_transaction_string, "|");
-   strcat(complete_transaction_string, amount_string);
-   strcat(complete_transaction_string, "|");
-   strcat(complete_transaction_string, type_string);
-   strcat(complete_transaction_string, "|");
-   strcat(complete_transaction_string, description_string);
-   strcat(complete_transaction_string, "|");
-   
-   /* Allocate memory for our new transaction */
-   p = malloc(strlen(complete_transaction_string) + 1);
-      
-   if(p == NULL)
-   {
-      printf("\nMemory allocation error.\n");
-      return EXIT_FAILURE;
-   }
-      
-   strcpy(p, complete_transaction_string);
-   
-   /* Store the pointer to our new transaction in our budget array */
-   c = budget + id - 1;
-   *c = p;
+   strcpy(prev->date, date_string);
+   strcpy(prev->amount, amount_string);
+   strcpy(prev->type, type_string);
+   strcpy(prev->description, description_string);
    
    /* Move the new data to a temp file
     * Remove the original file, and rename the temp file
@@ -430,11 +434,19 @@ int update_transaction(int *number_of_transactions, char **budget)
       exit(EXIT_FAILURE);
    }
    
-   c = budget;
-   for(i = 0; i < *number_of_transactions; i++)
+   p = budget;
+   while(p != NULL)
    {
-      fprintf(temp_pointer, "%s", *c);
-      c++;
+      strcpy(complete_transaction_string, p->date);
+      strcat(complete_transaction_string, "|");
+      strcat(complete_transaction_string, p->amount);
+      strcat(complete_transaction_string, "|");
+      strcat(complete_transaction_string, p->type);
+      strcat(complete_transaction_string, "|");
+      strcat(complete_transaction_string, p->description);
+      strcat(complete_transaction_string, "|");
+      fprintf(temp_pointer, "%s\n", complete_transaction_string);
+      p = p->next;
    }
    
    fclose(temp_pointer);
