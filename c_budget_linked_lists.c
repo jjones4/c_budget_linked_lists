@@ -219,10 +219,8 @@ int main(void)
             }
             else
             {
-               /*
                number_of_transactions =
                   delete_transaction(&number_of_transactions, budget);
-               */
             }
          }
          else if(menu_option_to_int == 5)

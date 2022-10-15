@@ -459,13 +459,15 @@ int update_transaction(int *number_of_transactions, struct transaction *budget)
 
 
 
-int delete_transaction(int *number_of_transactions, char **budget)
+int delete_transaction(int *number_of_transactions, struct transaction *budget)
 {
    FILE* temp_pointer;
    char id_string[MENU_INPUT_LENGTH + 1];
    char menu_string[MENU_INPUT_LENGTH + 1];
+   char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1];
    
-   char **p;
+   struct transaction *p;
+   struct transaction *prev;
    
    BOOL valid_id = FALSE;
    BOOL valid_yes_no = FALSE;
@@ -539,25 +541,39 @@ int delete_transaction(int *number_of_transactions, char **budget)
          exit(EXIT_FAILURE);
       }
       
-      /* Remove the deleted transaction's pointer from array */
+      /* Remove the deleted transaction from list */
       p = budget;
-      for(i = 0; i < *number_of_transactions; i++)
+      prev = budget;
+      i = 1;
+      while(p != NULL)
       {
-         if(i >= *number_of_transactions)
+         /* Skip the transaction we want to delete */
+         /* Set the previous node's "next pointer" to skip
+          * over the node to be deleted and point to the node
+          * after that one */
+         if(i == id)
          {
-            p = p + 1;
+            prev->next = p->next;
+            p = p->next;
+            continue;
          }
          
-         p++;
+         strcpy(complete_transaction_string, p->date);
+         strcat(complete_transaction_string, "|");
+         strcat(complete_transaction_string, p->amount);
+         strcat(complete_transaction_string, "|");
+         strcat(complete_transaction_string, p->type);
+         strcat(complete_transaction_string, "|");
+         strcat(complete_transaction_string, p->description);
+         strcat(complete_transaction_string, "|");
+         
+         fprintf(temp_pointer, "%s\n", complete_transaction_string);
+         
+         i++;
+         prev = p;
+         p = p->next;
       }
       
-      p = budget;
-      for(i = 0; i < *number_of_transactions - 1; i++)
-      {
-         fprintf(temp_pointer, "%s", *p);
-         p++;
-      }
-   
       fclose(temp_pointer);
       remove(FILE_NAME);
       rename(TEMP_FILE_NAME, FILE_NAME);
