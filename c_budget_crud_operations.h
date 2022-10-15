@@ -35,7 +35,7 @@ struct transaction
    struct transaction *next;
 };
 
-int create_transaction(int *number_of_transactions, char **budget);
+int create_transaction(int *number_of_transactions, struct transaction *budget);
 int read_transactions(int *number_of_transactions, struct transaction *budget);
 int update_transaction(int *number_of_transactions, char **budget);
 int delete_transaction(int *number_of_transactions, char **budget);

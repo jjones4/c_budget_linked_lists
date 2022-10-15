@@ -59,9 +59,10 @@ int main(void)
    char *type;
    char *description;
    
-   /* This will be our "first" node in the unordered list */
+   /* This will be our first node in the unordered list */
    /* This node begins the list of all transactions in our budget */
    struct transaction *budget = NULL;
+   
    struct transaction *current_node;
    
    char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1] = {0};
@@ -180,10 +181,8 @@ int main(void)
              */
             if(number_of_transactions < MAX_TRANSACTIONS)
             {
-               /*
                number_of_transactions = create_transaction(&number_of_transactions,
                   budget);
-               */
             }
             else
             {

@@ -35,7 +35,7 @@ char *parse_transaction_string(char *transaction_field, char *complete_transacti
 
 
 
-int create_transaction(int *number_of_transactions, char **budget)
+int create_transaction(int *number_of_transactions, struct transaction *budget)
 {
    FILE *fp;
    char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1] = {0};
@@ -44,8 +44,12 @@ int create_transaction(int *number_of_transactions, char **budget)
    char type_string[TYPE_LENGTH + 1];
    char description_string[DESCRIPTION_LENGTH + 1];
    
-   char *p;
-   char **c;
+   char *date;
+   char *amount;
+   char *type;
+   char *description;
+   
+   struct transaction *new_node;
    
    BOOL valid_amount = FALSE, valid_description = FALSE;
    
@@ -147,20 +151,33 @@ int create_transaction(int *number_of_transactions, char **budget)
    strcat(complete_transaction_string, description_string);
    strcat(complete_transaction_string, "|");
    
-   /* Allocate memory for our new transaction */
-   p = malloc(strlen(complete_transaction_string) + 1);
+   /* Allocate memory for our new transaction node */
+   new_node = malloc(sizeof(struct transaction));
       
-   if(p == NULL)
+   if(new_node == NULL)
    {
       printf("\nMemory allocation error.\n");
       return EXIT_FAILURE;
    }
-      
-   strcpy(p, complete_transaction_string);
    
-   /* Store the pointer to our new transaction in our budget array */
-   c = budget + *number_of_transactions;
-   *c = p;
+   /* Put our new transaction into our unordered list */
+   date = malloc(strlen(date_string));
+   amount = malloc(strlen(amount_string));
+   type = malloc(strlen(type_string));
+   description= malloc(strlen(description_string));
+   
+   strcpy(date, date_string);
+   strcpy(amount, amount_string);
+   strcpy(type, type_string);
+   strcpy(description, description_string);
+   
+   new_node->date = date;
+   new_node->amount = amount;
+   new_node->type = type;
+   new_node->description = description;
+      
+   new_node->next = budget;
+   budget = new_node;
    
    /* Write record to budget.txt */
    fprintf(fp, "%s", complete_transaction_string);
@@ -186,7 +203,7 @@ int read_transactions(int *number_of_transactions, struct transaction *budget)
    /* Print out the transactions from the 2d array */
    while(temp != NULL)
    {
-      printf("%10d\t%-11s\t%10s\t%5s\t%-50s\n", i + 1, temp->date,
+      printf("%10d\t%-11s\t%10s\t%5s\t%-50s\n", i, temp->date,
          temp->amount, temp->type, temp->description);
       temp = temp->next;
       i++;
