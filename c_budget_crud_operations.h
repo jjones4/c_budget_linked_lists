@@ -43,7 +43,7 @@ int create_transaction(int *number_of_transactions, struct transaction **ptr_bud
 
 int read_transactions(int *number_of_transactions, struct transaction *budget);
 int update_transaction(int *number_of_transactions, struct transaction *budget);
-int delete_transaction(int *number_of_transactions, struct transaction *budget);
+int delete_transaction(int *number_of_transactions, struct transaction **ptr_budget);
 
 #endif
 

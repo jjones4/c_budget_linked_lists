@@ -194,8 +194,8 @@ int main(void)
              */
             if(number_of_transactions < MAX_TRANSACTIONS)
             {
-               number_of_transactions = create_transaction(&number_of_transactions,
-                  &budget);
+               number_of_transactions =
+                  create_transaction(&number_of_transactions, &budget);
             }
             else
             {
@@ -233,7 +233,7 @@ int main(void)
             else
             {
                number_of_transactions =
-                  delete_transaction(&number_of_transactions, budget);
+                  delete_transaction(&number_of_transactions, &budget);
             }
          }
          else if(menu_option_to_int == 5)
