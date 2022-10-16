@@ -62,7 +62,7 @@ int main(void)
    /* This will be our first node in the unordered list */
    /* This node begins the list of all transactions in our budget */
    struct transaction *budget = NULL;
-   
+   struct transaction *previous_node = NULL;
    struct transaction *current_node;
    
    char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1] = {0};
@@ -110,13 +110,18 @@ int main(void)
          return EXIT_FAILURE;
       }
       
-      /* Keep track of our position as we read from the complete_transaction_string array */
+      /* Keep track of our position as we read from the 
+       *complete_transaction_string array */
       transaction_string_index = complete_transaction_string;
    
-      transaction_string_index = parse_transaction_string(date_string, transaction_string_index);
-      transaction_string_index = parse_transaction_string(amount_string, transaction_string_index);
-      transaction_string_index = parse_transaction_string(type_string, transaction_string_index);
-      transaction_string_index = parse_transaction_string(description_string, transaction_string_index);
+      transaction_string_index = parse_transaction_string(date_string,
+         transaction_string_index);
+      transaction_string_index = parse_transaction_string(amount_string,
+         transaction_string_index);
+      transaction_string_index = parse_transaction_string(type_string,
+         transaction_string_index);
+      transaction_string_index = parse_transaction_string(description_string,
+         transaction_string_index);
       
       /* Allocate memory for new transaction structure coming from
        * the file */
@@ -143,8 +148,16 @@ int main(void)
       current_node->type = type;
       current_node->description = description;
       
-      current_node->next = budget;
-      budget = current_node;
+      if(number_of_transactions == 0)
+      {
+         previous_node = current_node;
+         current_node->next = NULL;
+         budget = current_node;
+      }
+      
+      previous_node->next = current_node;
+      previous_node = current_node;
+      current_node->next = NULL;
       
       number_of_transactions++;
    }
