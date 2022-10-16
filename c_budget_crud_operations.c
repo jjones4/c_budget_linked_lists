@@ -468,15 +468,14 @@ int delete_transaction(int *number_of_transactions, struct transaction *budget)
    
    struct transaction *p;
    struct transaction *prev;
+   struct transaction *free_mem;
    
    BOOL valid_id = FALSE;
    BOOL valid_yes_no = FALSE;
    
    int i, id = 0;
    
-   /*
    (void) read_transactions(number_of_transactions, budget);
-   */
    
    do
    {
@@ -553,8 +552,11 @@ int delete_transaction(int *number_of_transactions, struct transaction *budget)
           * after that one */
          if(i == id)
          {
+            free_mem = prev->next;
             prev->next = p->next;
             p = p->next;
+            free(free_mem);
+            i++;
             continue;
          }
          
