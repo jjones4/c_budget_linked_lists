@@ -19,23 +19,23 @@ TARGET = c_budget_linked_lists
 
 all: $(TARGET)
   
-$(TARGET): c_budget_linked_lists.o c_budget_menus.o c_budget_validation.o c_budget_read_input.o c_budget_crud_operations.o
-	$(CC) $(CFLAGS) -o c_budget_linked_lists c_budget_linked_lists.o c_budget_menus.o c_budget_validation.o c_budget_read_input.o c_budget_crud_operations.o
+$(TARGET): c_budget_linked_lists.o menus.o validation.o read_input.o crud_operations.o
+	$(CC) $(CFLAGS) -o c_budget_linked_lists c_budget_linked_lists.o menus.o validation.o read_input.o crud_operations.o
 
-c_budget_linked_lists.o: $(TARGET).c c_budget_menus.c c_budget_validation.c c_budget_read_input.c c_budget_crud_operations.c
+c_budget_linked_lists.o: $(TARGET).c menus.c validation.c read_input.c crud_operations.c
 	$(CC) $(CFLAGS) -c c_budget_linked_lists.c
 
-c_budget_crud_operations.o: c_budget_crud_operations.c c_budget_crud_operations.h
-	$(CC) $(CFLAGS) -c c_budget_crud_operations.c
+crud_operations.o: crud_operations.c crud_operations.h
+	$(CC) $(CFLAGS) -c crud_operations.c
 
-c_budget_menus.o: c_budget_menus.c c_budget_menus.h
-	$(CC) $(CFLAGS) -c c_budget_menus.c
+menus.o: menus.c menus.h
+	$(CC) $(CFLAGS) -c menus.c
 
-c_budget_validation.o: c_budget_validation.c c_budget_validation.h boolean.h
-	$(CC) $(CFLAGS) -c c_budget_validation.c
+validation.o: validation.c validation.h boolean.h
+	$(CC) $(CFLAGS) -c validation.c
 
-c_budget_read_input.o: c_budget_read_input.c c_budget_read_input.h
-	$(CC) $(CFLAGS) -c c_budget_read_input.c
+read_input.o: read_input.c read_input.h
+	$(CC) $(CFLAGS) -c read_input.c
 	
 clean:
 	$(RM) $(TARGET)
