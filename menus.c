@@ -1,6 +1,6 @@
 /*
  *
- * Name:       c_budget_menus.c
+ * Name:       menus.c
  *
  * Purpose:    Contains functions for showing c_budget_linked_lists'
  *             menus to the user.
@@ -24,7 +24,7 @@
  * Preprocessing directives
  *
  */
-#include "c_budget_menus.h"
+#include "menus.h"
 
 
 

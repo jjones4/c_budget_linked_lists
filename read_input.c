@@ -1,6 +1,6 @@
 /*
  *
- * Name:       c_budget_read_input.c
+ * Name:       read_input.c
  *
  * Purpose:    Contains functions for reading user input.
  *
@@ -23,7 +23,7 @@
  * Preprocessing directives
  *
  */
-#include "c_budget_read_input.h"
+#include "read_input.h"
 
 
 

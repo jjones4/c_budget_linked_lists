@@ -1,6 +1,6 @@
 /*
  *
- * Name:       c_budget_validation.h
+ * Name:       validation.h
  *
  * Purpose:    Contains function prototypes for validating user input.
  *

@@ -1,6 +1,6 @@
 /*
  *
- * Name:       c_budget_crud_operations.c
+ * Name:       crud_operations.c
  *
  * Purpose:    Contains functions for adding, displaying, updating,
  *	       or removing a budget transaction.
@@ -24,11 +24,11 @@
  * Preprocessing directives
  *
  */
-#include "c_budget_crud_operations.h"
+#include "crud_operations.h"
 #include "boolean.h"
-#include "c_budget_read_input.h"
-#include "c_budget_validation.h"
-#include "c_budget_menus.h"
+#include "read_input.h"
+#include "validation.h"
+#include "menus.h"
 
 char *build_transaction_string(const char *input, char *completed_transaction);
 char *parse_transaction_string(char *transaction_field, char *complete_transaction_string);

@@ -1,6 +1,6 @@
 /*
  *
- * Name:       c_budget_read_input.h
+ * Name:       read_input.h
  *
  * Purpose:    Define macros and function prototypes for data input.
  *

@@ -1,6 +1,6 @@
 /*
  *
- * Name:       c_budget_validation.c
+ * Name:       validation.c
  *
  * Purpose:    Contains functions for validating user input.
  *
@@ -23,8 +23,8 @@
  * Preprocessing directives
  *
  */
-#include "c_budget_read_input.h"
-#include "c_budget_validation.h"
+#include "read_input.h"
+#include "validation.h"
 
 
 
